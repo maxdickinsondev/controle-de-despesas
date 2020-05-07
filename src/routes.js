@@ -1,9 +1,12 @@
 const { Router } = require('express');
+const cors = require('cors');
 const routes = new Router();
 
 const SessionController = require('./controllers/SessionController');
 const DwellerController = require('./controllers/DwellerController');
 const ExpensesController = require('./controllers/ExpensesController');
+
+routes.use(cors());
 
 routes.post('/login', SessionController.create);
 

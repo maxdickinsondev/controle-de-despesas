@@ -2,11 +2,7 @@ const connection = require('../database/connection');
 
 module.exports = {
     async index(req, res) {
-        const dwellerId = req.headers.authorization;
-
-        const expenses = await connection('expenses')
-            .where('dwellerId', dwellerId)
-            .select('*');
+        const expenses = await connection('expenses').select('*');
 
         return res.json(expenses);
     },
@@ -35,9 +31,8 @@ module.exports = {
     },
 
     async store(req, res) {
-        const { name, value, date } = req.body;
-        const dwellerId = req.headers.authorization;
-
+        const { dwellerId, name, value, date } = req.body;
+       
         const [expensesId] = await connection('expenses').insert({
             name,
             value,
