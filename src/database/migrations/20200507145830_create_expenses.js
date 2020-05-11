@@ -2,7 +2,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('expenses', function (table) {
         table.increments('expensesId');
 
-        table.string('name').notNullable();
+        table.string('title').notNullable();
         table.string('value').notNullable();
         table.string('date').notNullable();
         table.boolean('paid');

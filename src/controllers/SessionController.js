@@ -7,7 +7,7 @@ module.exports = {
         const dweller = await connection('dweller')
             .where('email', email)
             .andWhere('password', password)
-            .select('name')
+            .select(['name', 'dwellerId'])
             .first();
 
         if (!dweller) {

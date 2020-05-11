@@ -18,6 +18,14 @@ module.exports = {
         return res.json(expenses);
     },
 
+    async paidAll(req, res) {
+        const expenses = await connection('expenses')
+            .where('paid', 'true')
+            .select('*');
+
+        return res.json(expenses);
+    },
+
     async unpaid(req, res) {
         const dwellerId = req.headers.authorization;
 
@@ -30,11 +38,21 @@ module.exports = {
 
     },
 
+    async unpaidAll(req, res) {
+        const expenses = await connection('expenses')
+            .join('dweller', 'dweller.dwellerId', '=', 'expenses.dwellerId')
+            .andWhere('paid', null)
+            .select(['expenses.*', 'dweller.name']);
+
+        return res.json(expenses);
+
+    },
+
     async store(req, res) {
-        const { dwellerId, name, value, date } = req.body;
+        const { dwellerId, title, value, date } = req.body;
        
         const [expensesId] = await connection('expenses').insert({
-            name,
+            title,
             value,
             date,
             dwellerId
@@ -45,18 +63,10 @@ module.exports = {
 
     async update(req, res) {
         const { id } = req.params;
-        const dwellerId = req.headers.authorization;
 
-        const expenses = await connection('expenses')
+        await connection('expenses')
             .where('expensesId', id)
-            .select('dwellerId')
-            .first();
-
-        if (expenses.dwellerId != dwellerId) {
-            return res.status(401).json({ error: 'Operation not permitted' });
-        }
-
-        await connection('expenses').where('expensesId', id).update('paid', 'true');
+            .update('paid', 'true');
 
         return res.status(204).send();
     } 
