@@ -69,5 +69,15 @@ module.exports = {
             .update('paid', 'true');
 
         return res.status(204).send();
-    } 
+    },
+
+    async delete(req, res) {
+        const { id } = req.params;
+
+        await connection('expenses')
+            .where('expensesId', id)
+            .del();
+
+        return res.status(204).send();
+    }
 }

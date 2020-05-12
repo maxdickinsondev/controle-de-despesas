@@ -17,5 +17,15 @@ module.exports = {
         });
 
         return res.json({ name, password });    
-    } 
+    },
+
+    async delete(req, res) {
+        const { id } = req.params;
+
+        await connection('dweller')
+            .where('dwellerId', id)
+            .del();
+
+        return res.status(204).send();
+    }
 }
